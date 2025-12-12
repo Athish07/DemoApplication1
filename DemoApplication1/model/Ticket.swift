@@ -31,7 +31,7 @@ struct Ticket {
         source: Location,
         destination: Location,
         dateOfJourney: Date,
-        ticketStatus: TicketStatus
+        ticketStatus: TicketStatus,
     ) {
         self.ticketId = Self.nextTicketId
         Self.nextTicketId += 1
@@ -49,6 +49,7 @@ struct Ticket {
         self.ticketStatus = ticketStatus
         self.bookingDate = Date()
         self.pnr = Self.generatePnr()
+        
     }
 
     mutating func updateTicketStatus(_ newStatus: TicketStatus) {
@@ -70,13 +71,13 @@ struct Ticket {
             Seat Preference: \(seatPreference)
             Allocated Seat: \(allocatedSeat)
             Status: \(ticketStatus)
-            Booked on: \(bookingDate)
+            Booked on: \(bookingDate.formatToIST())
             """
     }
 
     func getShortDetails() -> String {
         return
-            "Pnr: \(pnr), Journey Date: \(dateOfJourney), TrainName: \(trainName)) , Status: \(ticketStatus)"
+        "Pnr: \(pnr), Journey Date: \(dateOfJourney), TrainName: \(trainName)) , Status: \(ticketStatus)"
     }
 
     private static func generatePnr() -> String {
@@ -91,7 +92,7 @@ struct Ticket {
 extension Date {
     func formatToIST() -> String {
         let df = DateFormatter()
-        df.dateFormat = "dd-MM-yyyy HH:mm"
+        df.dateFormat = "dd-MM-yyyy"
         df.timeZone = TimeZone(identifier: "Asia/Kolkata")
         return df.string(from: self)
     }

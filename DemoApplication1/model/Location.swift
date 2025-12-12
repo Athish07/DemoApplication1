@@ -9,7 +9,7 @@ public struct Location {
     private static var nextId: Int = 1
 
     public static func createOrigin(name: String, departureTime: Date)
-        -> Location
+    -> Location
     {
         return Location(
             name: name,
@@ -19,7 +19,7 @@ public struct Location {
     }
 
     public static func createDestination(name: String, arrivalTime: Date)
-        -> Location
+    -> Location
     {
         return Location(
             name: name,
@@ -65,7 +65,7 @@ public struct Location {
             return "Arrival: \(arr.formatted(.dateTime.hour().minute()))"
         case (let arr?, let dep?):
             return
-                "Arr: \(arr.formatted(.dateTime.hour().minute())) | Dep: \(dep.formatted(.dateTime.hour().minute()))"
+            "Arr: \(arr.formatted(.dateTime.hour().minute())) | Dep: \(dep.formatted(.dateTime.hour().minute()))"
         default:
             return "No times"
         }

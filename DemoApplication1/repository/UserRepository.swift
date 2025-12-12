@@ -1,4 +1,4 @@
-final class UserRepository: UserRepoService {
+class UserRepository: UserRepoService {
 
     private var users: [Int: User] = [:]
 
@@ -18,7 +18,7 @@ final class UserRepository: UserRepoService {
     }
     
     func updatePassword(for userId: Int, with newPassword: String) {
-        users[userId]!.password = newPassword
+        users[userId]?.password = newPassword
     }
     
 }

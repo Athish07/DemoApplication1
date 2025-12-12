@@ -15,7 +15,7 @@ struct Validation {
     }
 
     private static let emailRegex =
-        "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+    "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
 
     public static func isValidEmail(_ email: String) -> Bool {
         let trimmed = email.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -38,7 +38,7 @@ struct Validation {
     public static func isValidName(_ name: String) -> Bool {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         return isValidString(name) && trimmed.count >= minNameLength
-            && trimmed.count <= maxNameLength && trimmed.matches(nameRegex)
+        && trimmed.count <= maxNameLength && trimmed.matches(nameRegex)
     }
 
     private static let passwordStrengthRegex = "^(?=.*[a-zA-Z])(?=.*\\d).+$"
@@ -46,8 +46,8 @@ struct Validation {
     public static func isValidPassword(_ password: String) -> Bool {
         let trimmed = password.trimmingCharacters(in: .whitespacesAndNewlines)
         return isValidString(password) && trimmed.count >= minPasswordLength
-            && trimmed.count <= maxPasswordLength
-            && trimmed.matches(passwordStrengthRegex)
+        && trimmed.count <= maxPasswordLength
+        && trimmed.matches(passwordStrengthRegex)
     }
 
     private static let stationNameRegex = "^[a-zA-Z\\s-]+$"
@@ -57,13 +57,13 @@ struct Validation {
             in: .whitespacesAndNewlines
         )
         return isValidString(stationName)
-            && trimmed.count <= maxStationNameLength
-            && trimmed.matches(stationNameRegex)
+        && trimmed.count <= maxStationNameLength
+        && trimmed.matches(stationNameRegex)
     }
 
     public static func isValidUser(_ user: User) -> Bool {
         return isValidName(user.userName) && isValidEmail(user.email)
-            && isValidPhone(user.phoneNumber)
+        && isValidPhone(user.phoneNumber)
     }
 
     public static func isValidAge(
@@ -87,7 +87,7 @@ struct Validation {
     }
 
     public static func passwordsMatch(_ password1: String, _ password2: String)
-        -> Bool
+    -> Bool
     {
         return password1 == password2
     }

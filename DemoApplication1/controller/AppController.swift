@@ -82,7 +82,7 @@ final class AppController {
     
 
     func register(name: String, email: String, phone: String, password: String)
-        -> Bool
+    -> Bool
     {
         guard !authService.isUserExists(email: email) else { return false }
         return authService.register(
@@ -94,7 +94,7 @@ final class AppController {
     }
 
     func searchTrains(source: String, destination: String, date: Date)
-        -> [Train]
+    -> [Train]
     {
         trainService.searchTrains(
             source: source,

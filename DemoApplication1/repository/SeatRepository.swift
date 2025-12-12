@@ -11,20 +11,38 @@ final class SeatRepository: SeatRepoService {
     static let shared = SeatRepository()
     private init() {}
 
+    func racQueueCount(for key: String) -> Int {
+        racQueues[key]?.count ?? 0
+        
+    }
+    
     func racQueue(for key: String) -> [Ticket] {
         racQueues[key] ?? []
     }
-
-    func saveRACQueue(_ queue: [Ticket], for key: String) {
-        racQueues[key] = queue
+    
+    func removeRACSeat(for key: String) -> Ticket? {
+        racQueues[key]?.removeFirst()
+    }
+    
+    func removeWaitingListSeat(for key: String) -> Ticket?
+    {
+        waitingLists[key]?.removeFirst()
+    }
+    
+    func saveRACQueue(_ ticket: Ticket, for key: String) {
+        racQueues[key,default: []].append(ticket)
     }
 
     func waitingList(for key: String) -> [Ticket] {
         waitingLists[key] ?? []
     }
+    
+    func waitingListCount(for key:String) -> Int {
+        waitingLists[key]?.count ?? 0
+    }
 
-    func saveWaitingList(_ list: [Ticket], for key: String) {
-        waitingLists[key] = list
+    func saveWaitingList(_ ticket: Ticket, for key: String) {
+        waitingLists[key,default: []].append(ticket)
     }
 
     func getSeats(trainNumber: Int) -> [Date: [String: [String]]] {

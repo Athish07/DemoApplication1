@@ -15,11 +15,7 @@ final class TicketRepository: TicketRepoService {
     func findByUser(_ userId: Int) -> [Ticket] {
         tickets.values.filter { $0.userId == userId }
     }
-
-    func activeTickets(for userId: Int) -> [Ticket] {
-        findByUser(userId).filter { $0.ticketStatus != .cancelled }
-    }
-
+    
     func findById(_ ticketId: Int) -> Ticket? {
         tickets[ticketId]
     }

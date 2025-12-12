@@ -1,38 +1,38 @@
 import Foundation
 
- final class BookingImpl: BookingService {
+final class BookingImpl: BookingService {
 
  
-      private let seatManager: SeatManagerService
-      private let seatRepo: SeatRepoService
-      private let ticketRepo: TicketRepoService
-      private let trainRepo: TrainRepoService
+    private let seatManager: SeatManagerService
+    private let seatRepo: SeatRepoService
+    private let ticketRepo: TicketRepoService
+    private let trainRepo: TrainRepoService
 
-      private init(
-          seatManager: SeatManagerService,
-          seatRepo: SeatRepoService,
-          ticketRepo: TicketRepoService,
-          trainRepo: TrainRepoService
-      ) {
-          self.seatManager = seatManager
-          self.seatRepo = seatRepo
-          self.ticketRepo = ticketRepo
-          self.trainRepo = trainRepo
-      }
+    private init(
+        seatManager: SeatManagerService,
+        seatRepo: SeatRepoService,
+        ticketRepo: TicketRepoService,
+        trainRepo: TrainRepoService
+    ) {
+        self.seatManager = seatManager
+        self.seatRepo = seatRepo
+        self.ticketRepo = ticketRepo
+        self.trainRepo = trainRepo
+    }
      
-     static func build(
-         seatManager: SeatManagerService,
-         seatRepo: SeatRepoService,
-         ticketRepo: TicketRepoService,
-         trainRepo: TrainRepoService
-     ) -> BookingService {
-         return BookingImpl(
-             seatManager: seatManager,
-             seatRepo: seatRepo,
-             ticketRepo: ticketRepo,
-             trainRepo: trainRepo
-         )
-     }
+    static func build(
+        seatManager: SeatManagerService,
+        seatRepo: SeatRepoService,
+        ticketRepo: TicketRepoService,
+        trainRepo: TrainRepoService
+    ) -> BookingService {
+        return BookingImpl(
+            seatManager: seatManager,
+            seatRepo: seatRepo,
+            ticketRepo: ticketRepo,
+            trainRepo: trainRepo
+        )
+    }
      
     func bookTicket(
         user: User,
@@ -72,10 +72,7 @@ import Foundation
                 source: source,
                 destination: destination
             )
-
-            _ = String(allocatedSeat.prefix { $0 != "(" })
-                .trimmingCharacters(in: .whitespaces)
-
+            
             let ticket = Ticket(
                 trainNumber: train.trainNumber,
                 trainName: train.trainName,
@@ -88,7 +85,7 @@ import Foundation
                 source: source,
                 destination: destination,
                 dateOfJourney: journeyDate,
-                ticketStatus: .confirmed
+                ticketStatus: .confirmed,
             )
 
             ticketRepo.save(ticket)
@@ -100,9 +97,9 @@ import Foundation
             return ticket
         }
 
-        var racQueue = seatRepo.racQueue(for: key)
+        let racQueueCount = seatRepo.racQueueCount(for: key)
 
-        if racQueue.count >= Int(train.totalRACSeats) {
+        if racQueueCount >= Int(train.totalRACSeats) {
 
             return bookWaitingListTicket(
                 train: train,
@@ -119,7 +116,7 @@ import Foundation
             )
         }
 
-        let racPosition = racQueue.count + 1
+        let racPosition = racQueueCount + 1
         let racSeatNumber = ((racPosition - 1) / 2) + 1
         let racSeat = "RAC-SEAT-\(racSeatNumber)"
         let racLabel = "RAC\(racPosition)"
@@ -139,8 +136,8 @@ import Foundation
             ticketStatus: .rac
         )
 
-        racQueue.append(ticket)
-        seatRepo.saveRACQueue(racQueue, for: key)
+       
+        seatRepo.saveRACQueue(ticket, for: key)
 
         for seg in segments {
             seatRepo.addBookedSeat(
@@ -174,14 +171,14 @@ import Foundation
         segments: [String]
     ) -> Ticket? {
 
-        var waitingList = seatRepo.waitingList(for: key)
+        let waitingListCount: Int = seatRepo.waitingListCount(for: key)
 
-        if waitingList.count >= Int(train.totalWaitingSeats) {
-            // No more waiting list slots
+        if waitingListCount >= Int(train.totalWaitingSeats) {
+            
             return nil
         }
 
-        let wlPosition = waitingList.count + 1
+        let wlPosition = waitingListCount + 1
         let wlLabel = "WL\(wlPosition)"
 
         let ticket = Ticket(
@@ -198,9 +195,8 @@ import Foundation
             dateOfJourney: normalizedDate,
             ticketStatus: .waitingList
         )
-
-        waitingList.append(ticket)
-        seatRepo.saveWaitingList(waitingList, for: key)
+        
+        seatRepo.saveWaitingList(ticket, for: key)
 
         ticketRepo.save(ticket)
         ticketRepo.addHistory(
@@ -244,11 +240,8 @@ import Foundation
     func promoteFromRAC(trainNumber: Int, journeyDate: Date) {
 
         let key = compositeKey(trainNumber, journeyDate)
-        var racQueue = seatRepo.racQueue(for: key)
-
-        guard !racQueue.isEmpty else { return }
-
-        var racTicket = racQueue.removeFirst()
+        
+        guard var racTicket = seatRepo.removeRACSeat(for: key) else { return }
 
         let newSeat = seatManager.allocateSeat(
             trainNumber: trainNumber,
@@ -267,34 +260,27 @@ import Foundation
             racTicket.ticketId,
             TicketStatusHistory(date: Date(), status: .confirmed)
         )
-
-        seatRepo.saveRACQueue(racQueue, for: key)
-
+        
         promoteFromWaiting(trainNumber: trainNumber, journeyDate: journeyDate)
     }
 
     func promoteFromWaiting(trainNumber: Int, journeyDate: Date) {
 
         let key = compositeKey(trainNumber, journeyDate)
-        var wlQueue = seatRepo.waitingList(for: key)
-
-        guard !wlQueue.isEmpty else { return }
-
-        var ticket = wlQueue.removeFirst()
-
-        var racQueue = seatRepo.racQueue(for: key)
-        let racPosition = racQueue.count + 1
+        let racQueueCount = seatRepo.racQueueCount(for: key)
+        guard var ticket = seatRepo.removeWaitingListSeat(for : key) else {
+            return
+        }
+        
+        let racPosition = racQueueCount + 1
         let racSeatNumber = ((racPosition - 1) / 2) + 1
         let racSeat = "RAC-SEAT-\(racSeatNumber)"
         let racLabel = "RAC\(racPosition)"
 
         ticket.updateTicketStatus(.rac)
         ticket.updateAllocatedSeat("\(racSeat) (\(racLabel))")
-
-        racQueue.append(ticket)
-
-        seatRepo.saveWaitingList(wlQueue, for: key)
-        seatRepo.saveRACQueue(racQueue, for: key)
+        
+        seatRepo.saveRACQueue(ticket, for: key)
 
         ticketRepo.save(ticket)
 

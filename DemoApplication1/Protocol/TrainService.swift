@@ -2,7 +2,7 @@ import Foundation
 
 protocol TrainService {
     func searchTrains(source: String, destination: String, date: Date)
-        -> [Train]
+    -> [Train]
     func getTrain(trainNumber: Int) -> Train?
     func addTrain(_ train: Train)
     func initializeTrainSeats(
@@ -15,7 +15,6 @@ protocol TrainService {
     )
     func getSampleRouteChennaiBangalore() -> Int
     func getSampleRouteDelhiMumbai() -> Int
-    func getStationIndex(routeId: Int, location: Location) -> Int
     func findLocationObject(
         train: Train,
         sourceName: String,

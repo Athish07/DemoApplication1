@@ -2,12 +2,12 @@ import Foundation
 
 struct AppHelper {
 
-    func readInt() -> Int {
+    static func readInt() -> Int {
         while true {
             if let line = readLine(),
-                let value = Int(
-                    line.trimmingCharacters(in: .whitespacesAndNewlines)
-                )
+               let value = Int(
+                line.trimmingCharacters(in: .whitespacesAndNewlines)
+               )
             {
                 return value
             }
@@ -15,7 +15,7 @@ struct AppHelper {
         }
     }
 
-    func readString() -> String {
+    static func readString() -> String {
         return (readLine() ?? "").trimmingCharacters(
             in: .whitespacesAndNewlines
         )

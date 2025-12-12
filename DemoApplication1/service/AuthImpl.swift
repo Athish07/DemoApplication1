@@ -1,10 +1,10 @@
- final class AuthServiceImpl: AuthService {
+class AuthServiceImpl: AuthService {
 
     private let userRepoService: UserRepoService
     
-      private init(userRepoService: UserRepoService) {
-           self.userRepoService = userRepoService
-       }
+    private init(userRepoService: UserRepoService) {
+        self.userRepoService = userRepoService
+    }
     
     static func build(
         userRepo: UserRepoService
@@ -14,7 +14,7 @@
     
     
     func register(name: String, email: String, phone: String, password: String)
-        -> Bool
+    -> Bool
     {
         let user = User(
             userName: name,
@@ -32,11 +32,12 @@
     }
 
     func login(email: String, password: String) -> User? {
-        guard let user = userRepoService.findByEmail(email.lowercased()) else {
-            return nil
+        if let user = userRepoService.findByEmail(email.lowercased()) {
+            return user.password == password ? user : nil
         }
+        
+        return nil
 
-        return user.password == password ? user : nil
     }
 
     func isUserExists(email: String) -> Bool {

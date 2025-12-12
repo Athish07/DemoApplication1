@@ -6,9 +6,9 @@ final class SeatManagerImpl: SeatManagerService {
     private let trainRepo: TrainRepoService
 
     private init(seatRepo: SeatRepoService, trainRepo: TrainRepoService) {
-            self.seatRepo = seatRepo
-            self.trainRepo = trainRepo
-        }
+        self.seatRepo = seatRepo
+        self.trainRepo = trainRepo
+    }
     
     static func build(
         seatRepo: SeatRepoService,
@@ -110,23 +110,18 @@ final class SeatManagerImpl: SeatManagerService {
             return "FULL"
         }
 
-        let seatTypes = ["C","RAC","WL"]
+        
         var allocatedSeat: String?
 
-        for type in seatTypes {
-            allocatedSeat = findSeatByPreference(
-                segments: segments,
-                seatMap: seatMap,
-                bookedMap: bookedMap,
-                prefix: type,
-                preference: seatPreference
-            )
-
-            if allocatedSeat != nil {
-                break
-            }
-        }
-
+    
+        allocatedSeat = findSeatByPreference(
+            segments: segments,
+            seatMap: seatMap,
+            bookedMap: bookedMap,
+            prefix: "C",
+            preference: seatPreference
+        )
+        
         if let allocatedSeat = allocatedSeat {
             for seg in segments {
                 seatRepo.addBookedSeat(
@@ -140,6 +135,7 @@ final class SeatManagerImpl: SeatManagerService {
 
         return allocatedSeat != nil ? "\(allocatedSeat!) (CONFIRMED)" : "FULL"
     }
+    
     func getAvailability(
         trainNumber: Int,
         journeyDate: Date,
@@ -155,8 +151,8 @@ final class SeatManagerImpl: SeatManagerService {
         let totalConfirmed = Int(train.totalConfirmedSeats)
 
         let bookedByDate =
-            seatRepo.getBookedSeats(trainNumber: trainNumber)[journeyDate]
-            ?? [:]
+        seatRepo.getBookedSeats(trainNumber: trainNumber)[journeyDate]
+        ?? [:]
 
         var minFreeConfirmed = totalConfirmed
 
@@ -196,7 +192,7 @@ final class SeatManagerImpl: SeatManagerService {
 
         for _ in 0..<totalSeats {
             let seat =
-                "C\(coach)-\(positions[(seatNo - 1) % positions.count])\(seatNo)"
+            "C\(coach)-\(positions[(seatNo - 1) % positions.count])\(seatNo)"
             seats.append(seat)
 
             seatNo += 1
@@ -225,8 +221,8 @@ final class SeatManagerImpl: SeatManagerService {
         for seat in seatMap[firstSegment] ?? [] {
             let hasPrefix = seat.hasPrefix(prefix)
             let matchesPreference =
-                preference == nil || preference?.lowercased() == "no-preference"
-                || seat.contains(preference!.prefix(1).uppercased())
+            preference == nil || preference?.lowercased() == "no-preference"
+            || seat.contains(preference!.prefix(1).uppercased())
             let notBooked = !(bookedMap[firstSegment] ?? []).contains(seat)
 
             if hasPrefix && matchesPreference && notBooked {
@@ -243,9 +239,9 @@ final class SeatManagerImpl: SeatManagerService {
             for seat in seatsInSegment {
                 let hasPrefix = seat.hasPrefix(prefix)
                 let matchesPreference =
-                    preference == nil
-                    || preference?.lowercased() == "no-preference"
-                    || seat.contains(preference!.prefix(1).uppercased())
+                preference == nil
+                || preference?.lowercased() == "no-preference"
+                || seat.contains(preference!.prefix(1).uppercased())
                 let notBooked = !bookedInSegment.contains(seat)
 
                 if hasPrefix && matchesPreference && notBooked {
@@ -262,8 +258,8 @@ final class SeatManagerImpl: SeatManagerService {
 
      
         if possibleSeats.isEmpty,
-            let pref = preference,
-            pref.lowercased() != "no-preference"
+           let pref = preference,
+           pref.lowercased() != "no-preference"
         {
             return findSeatByPreference(
                 segments: segments,

@@ -1,9 +1,9 @@
 import Foundation
 
-final class AppView {
+class AppView {
 
     private let controller: AppController
-    private let input = AppHelper()
+   
 
     init(controller: AppController) {
         self.controller = controller
@@ -59,7 +59,7 @@ final class AppView {
 
         switch choice {
         case 1: searchAndBook()
-        case 2: print(user)
+        case 2: showProfile()
         case 3: cancelTicket()
         case 4: showHistory()
         case 5: controller.logout()
@@ -73,7 +73,7 @@ final class AppView {
         while true {
 
             print("Email: ", terminator: "")
-            let email = input.readString()
+            let email = AppHelper.readString()
             if email == "0" { return }
 
             if !Validation.isValidEmail(email) {
@@ -82,13 +82,13 @@ final class AppView {
             }
 
             print("Password: ", terminator: "")
-            let password = input.readString()
+            let password = AppHelper.readString()
             if password == "0" { return }
 
             if controller.login(email: email, password: password) {
                 print("Login Success")
             } else {
-                print("Login Failed")
+                print("Invalid username or password. Try again.")
             }
             return
         }
@@ -100,7 +100,7 @@ final class AppView {
         var name: String
         while true {
             print("Name: ", terminator: "")
-            name = input.readString()
+            name = AppHelper.readString()
             if name == "0" { return }
             if Validation.isValidName(name) { break }
             print("Invalid name. Try again.")
@@ -109,7 +109,7 @@ final class AppView {
         var email: String
         while true {
             print("Email: ", terminator: "")
-            email = input.readString()
+            email = AppHelper.readString()
             if email == "0" { return }
             if Validation.isValidEmail(email) { break }
             print("Invalid email. Try again.")
@@ -118,7 +118,7 @@ final class AppView {
         var phone: String
         while true {
             print("Phone: ", terminator: "")
-            phone = input.readString()
+            phone = AppHelper.readString()
             if phone == "0" { return }
             if Validation.isValidPhone(phone) { break }
             print("Invalid phone. Try again.")
@@ -127,7 +127,7 @@ final class AppView {
         var password: String
         while true {
             print("Password: ", terminator: "")
-            password = input.readString()
+            password = AppHelper.readString()
             if password == "0" { return }
             if Validation.isValidPassword(password) { break }
             print("Invalid password. Try again.")
@@ -149,15 +149,15 @@ final class AppView {
         print("Enter 0 to go back")
 
         print("Source: ", terminator: "")
-        let source = input.readString()
+        let source = AppHelper.readString()
         if source == "0" { return }
 
         print("Destination: ", terminator: "")
-        let destination = input.readString()
+        let destination = AppHelper.readString()
         if destination == "0" { return }
 
         print("Date (dd-MM-yyyy): ", terminator: "")
-        let dateStr = input.readString()
+        let dateStr = AppHelper.readString()
         if dateStr == "0" { return }
 
         guard let date = DateFormatterHelper.parse(dateStr) else {
@@ -193,13 +193,13 @@ final class AppView {
                 source: source,
                 destination: destination
             ),
-                locations.count == 2,
-                let availability = controller.getAvailability(
-                    trainNumber: train.trainNumber,
-                    journeyDate: normalizedDate,
-                    source: locations[0],
-                    destination: locations[1]
-                )
+               locations.count == 2,
+               let availability = controller.getAvailability(
+                trainNumber: train.trainNumber,
+                journeyDate: normalizedDate,
+                source: locations[0],
+                destination: locations[1]
+               )
             {
                 print("----------------------------------------")
                 print("Train: \(train.trainName) (\(train.trainNumber))")
@@ -212,20 +212,33 @@ final class AppView {
             }
         }
     }
+    
+    private func showProfile() {
+       
+        guard let currentUser = controller.currentUser else {
+            return
+        }
+        
+        print("Profile Details: ")
+        print("Name: \(currentUser.userName)")
+        print("Email: \(currentUser.email)")
+        print("phoneNumber: \(currentUser.phoneNumber)")
+        
+    }
 
     private func searchAndBook() {
         print("Enter 0 to go back")
 
         print("Source: ", terminator: "")
-        let source = input.readString()
+        let source = AppHelper.readString()
         if source == "0" { return }
 
         print("Destination: ", terminator: "")
-        let destination = input.readString()
+        let destination = AppHelper.readString()
         if destination == "0" { return }
 
         print("Date (dd-MM-yyyy): ", terminator: "")
-        let dateStr = input.readString()
+        let dateStr = AppHelper.readString()
         if dateStr == "0" { return }
 
         guard let date = DateFormatterHelper.parse(dateStr) else {
@@ -261,13 +274,13 @@ final class AppView {
                 source: source,
                 destination: destination
             ),
-                locations.count == 2,
-                let availability = controller.getAvailability(
-                    trainNumber: train.trainNumber,
-                    journeyDate: normalizedDate,
-                    source: locations[0],
-                    destination: locations[1]
-                )
+               locations.count == 2,
+               let availability = controller.getAvailability(
+                trainNumber: train.trainNumber,
+                journeyDate: normalizedDate,
+                source: locations[0],
+                destination: locations[1]
+               )
             {
                 print("----------------------------------------")
                 print("Train: \(train.trainName) (\(train.trainNumber))")
@@ -290,7 +303,7 @@ final class AppView {
         }
 
         print("Passenger Name (0 to cancel): ", terminator: "")
-        let name = input.readString()
+        let name = AppHelper.readString()
         if name == "0" { return }
 
         print("Age (0 to cancel): ", terminator: "")
@@ -303,17 +316,17 @@ final class AppView {
             "(male, female, other, nondisclosure) (default is nondisclosure): ",
             terminator: ""
         )
-        let genderInput = input.readString()
+        let genderInput = AppHelper.readString()
         if genderInput == "0" { return }
         let gender =
-            Gender(rawValue: genderInput.lowercased()) ?? .nondisclosure
+        Gender(rawValue: genderInput.lowercased()) ?? .nondisclosure
 
         print("Seat Preference (0 to cancel)")
         print("(window, aisle, middle, any) (default is any): ", terminator: "")
-        let prefInput = input.readString()
+        let prefInput = AppHelper.readString()
         if prefInput == "0" { return }
         let preference =
-            SeatPreference(rawValue: prefInput.lowercased()) ?? .any
+        SeatPreference(rawValue: prefInput.lowercased()) ?? .any
 
         guard
             let locations = controller.findLocationObject(
@@ -338,6 +351,12 @@ final class AppView {
             journeyDate: normalizedDate
         ) {
             print(ticket.getDetails())
+            print(
+                "Source Arrival Time : \(locations[0].departureTime!.formatTimeOnlyIST())"
+            )
+            print(
+                "Destination Departure Time: \(locations[1].arrivalTime!.formatTimeOnlyIST())"
+            )
         } else {
             print("Booking Failed")
         }
@@ -386,7 +405,7 @@ final class AppView {
 
     private func safeReadInt(allowZeroAsValid: Bool = false) -> Int {
         while true {
-            let str = input.readString()
+            let str = AppHelper.readString()
             if let value = Int(str) {
                 if value == 0 && allowZeroAsValid { return value }
                 if value >= 0 { return value }
@@ -395,3 +414,14 @@ final class AppView {
         }
     }
 }
+
+extension Date {
+    
+    func formatTimeOnlyIST() -> String {
+        let df = DateFormatter()
+        df.dateFormat = "HH:mm"
+        df.timeZone = TimeZone(identifier: "Asia/Kolkata")
+        return df.string(from: self)
+    }
+}
+

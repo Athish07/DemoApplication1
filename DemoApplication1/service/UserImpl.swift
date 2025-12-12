@@ -1,12 +1,16 @@
 import Foundation
 
-final class UserImpl: UserService {
+class UserImpl: UserService {
     
     private let userRepo: UserRepoService
     private let bookingService: BookingService
     private let ticketRepo: TicketRepoService
     
-    private init(userRepo: UserRepoService, bookingService: BookingService, ticketRepo: TicketRepoService){
+    private init(
+        userRepo: UserRepoService,
+        bookingService: BookingService,
+        ticketRepo: TicketRepoService
+    ){
         self.userRepo=userRepo
         self.bookingService=bookingService
         self.ticketRepo=ticketRepo
@@ -25,25 +29,6 @@ final class UserImpl: UserService {
         )
     }
     
-    func updateProfile(currentUser: User?, name: String, phone: String) throws {
-
-        guard var currentUser else {
-            throw UserError.invalidUser
-        }
-
-        if !name.isEmpty && !Validation.isValidString(name) {
-            throw UserError.invalidName
-        }
-
-        if !phone.isEmpty && !Validation.isValidPhone(phone) {
-            throw UserError.invalidPhone
-        }
-
-        currentUser.userName = name.isEmpty ? currentUser.userName : name
-        currentUser.phoneNumber =
-            phone.isEmpty ? currentUser.phoneNumber : phone
-    }
-
     func validatePassword(currentUser: User?, oldPassword: String) -> Bool {
 
         guard
@@ -89,9 +74,5 @@ final class UserImpl: UserService {
     func viewTicketStatus(ticketId: Int) -> [TicketStatusHistory] {
         ticketRepo.history(for: ticketId)
     }
-
-    func updatePassword(currentUser: User, newPassword: String) {
-        userRepo.updatePassword(for: currentUser.userId, with: newPassword)
-    }
-
+    
 }

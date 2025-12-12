@@ -5,7 +5,7 @@ struct DateFormatterHelper {
     private static let formatter: DateFormatter = {
         let df = DateFormatter()
         df.dateFormat = "dd-MM-yyyy"
-        df.locale = Locale(identifier: "en_US_POSIX")
+        df.locale = Locale(identifier: "Asia/Kolkata")
         df.timeZone = TimeZone.current
         return df
     }()
