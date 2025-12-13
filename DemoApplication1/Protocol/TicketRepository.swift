@@ -1,6 +1,6 @@
 import Foundation
 
-protocol TicketRepoService {
+protocol TicketRepository {
 
     func save(_ ticket: Ticket)
     func findByUser(_ userId: Int) -> [Ticket]

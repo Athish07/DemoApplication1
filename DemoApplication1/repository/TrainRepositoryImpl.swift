@@ -1,11 +1,11 @@
 import Foundation
 
-class TrainRepository: TrainRepoService {
+class TrainRepositoryImpl: TrainRepository {
 
     private var trains: [Int: Train] = [:]
     private var route: [Int: [Location]] = [:]
     
-    static let shared = TrainRepository()
+    static let shared = TrainRepositoryImpl()
     private init() {}
 
     func save(_ train: Train) {

@@ -1,6 +1,6 @@
 import Foundation
 
-final class SeatRepository: SeatRepoService {
+final class SeatRepositoryImpl: SeatRepository {
 
     private var racQueues: [String: [Ticket]] = [:]
     private var waitingLists: [String: [Ticket]] = [:]
@@ -8,7 +8,7 @@ final class SeatRepository: SeatRepoService {
     private var trainSeatMap: [Int: [Date: [String: [String]]]] = [:]
     private var bookedSeatsMap: [Int: [Date: [String: Set<String>]]] = [:]
 
-    static let shared = SeatRepository()
+    static let shared = SeatRepositoryImpl()
     private init() {}
 
     func racQueueCount(for key: String) -> Int {
@@ -26,7 +26,7 @@ final class SeatRepository: SeatRepoService {
     
     func removeWaitingListSeat(for key: String) -> Ticket?
     {
-        waitingLists[key]?.removeFirst()
+         waitingLists[key]?.removeFirst()
     }
     
     func saveRACQueue(_ ticket: Ticket, for key: String) {

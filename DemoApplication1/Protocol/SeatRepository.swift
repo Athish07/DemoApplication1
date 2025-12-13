@@ -1,6 +1,6 @@
 import Foundation
 
-protocol SeatRepoService {
+protocol SeatRepository {
 
     func racQueue(for key: String) -> [Ticket]
     func racQueueCount(for key: String) -> Int

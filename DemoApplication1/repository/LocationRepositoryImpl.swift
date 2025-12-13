@@ -1,9 +1,9 @@
-class LocationRepository: LocationRepoService {
+class LocationRepositoryImpl: LocationRepository {
    
     private var locations: [Location] = []
     
     private init() {}
-    static let shared = LocationRepository()
+    static let shared = LocationRepositoryImpl()
     
     func fetchSouceAndIntermediates() -> [Location] {
         locations

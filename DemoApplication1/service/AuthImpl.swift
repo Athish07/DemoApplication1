@@ -1,13 +1,13 @@
 class AuthServiceImpl: AuthService {
 
-    private let userRepoService: UserRepoService
+    private let userRepo: UserRepository
     
-    private init(userRepoService: UserRepoService) {
-        self.userRepoService = userRepoService
+    private init(userRepoService: UserRepository) {
+        self.userRepo = userRepoService
     }
     
     static func build(
-        userRepo: UserRepoService
+        userRepo: UserRepository
     ) -> AuthService {
         return AuthServiceImpl(userRepoService: userRepo)
     }
@@ -27,12 +27,12 @@ class AuthServiceImpl: AuthService {
             return false
         }
 
-        userRepoService.save(user)
+        userRepo.save(user)
         return true
     }
 
     func login(email: String, password: String) -> User? {
-        if let user = userRepoService.findByEmail(email.lowercased()) {
+        if let user = userRepo.findByEmail(email.lowercased()) {
             return user.password == password ? user : nil
         }
         
@@ -41,6 +41,6 @@ class AuthServiceImpl: AuthService {
     }
 
     func isUserExists(email: String) -> Bool {
-        userRepoService.findByEmail(email.lowercased()) != nil
+        userRepo.findByEmail(email.lowercased()) != nil
     }
 }

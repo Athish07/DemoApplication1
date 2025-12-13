@@ -1,5 +1,5 @@
 
-protocol LocationRepoService {
+protocol LocationRepository {
     
     func fetchSouceAndIntermediates() -> [Location]
     func fetchDestinations() -> [Location]

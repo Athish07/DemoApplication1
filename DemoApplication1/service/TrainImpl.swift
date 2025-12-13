@@ -2,34 +2,29 @@ import Foundation
 
 class TrainImpl: TrainService {
 
-    private let trainRepoService: TrainRepoService
-    private let seatRepoService: SeatRepoService
+    private let trainRepo: TrainRepository
     private let seatManagerService: SeatManagerService
     private let locationService: LocationService
 
     init(
-        trainRepoService: TrainRepoService,
-        seatRepoService: SeatRepoService,
+        trainRepo: TrainRepository,
         seatManagerService: SeatManagerService,
         locationService: LocationService
     ) {
         self.seatManagerService = seatManagerService
-        self.trainRepoService = trainRepoService
-        self.seatRepoService = seatRepoService
+        self.trainRepo = trainRepo
         self.locationService = locationService
     }
 
     private static var routeIdCounter: Int = 1
 
     static func build(
-        trainRepo: TrainRepoService,
-        seatRepo: SeatRepoService,
+        trainRepo: TrainRepository,
         seatManager: SeatManagerService,
         locationService: LocationService
     ) -> TrainService {
         return TrainImpl(
-            trainRepoService: trainRepo,
-            seatRepoService: seatRepo,
+            trainRepo: trainRepo,
             seatManagerService: seatManager,
             locationService:  locationService
         )
@@ -42,7 +37,7 @@ class TrainImpl: TrainService {
            !source.trimmingCharacters(in: .whitespaces).isEmpty,
            !destination.trimmingCharacters(in: .whitespaces).isEmpty
         {
-            return trainRepoService.findTrains(
+            return trainRepo.findTrains(
                 from: source,
                 to: destination,
                 date: date
@@ -55,11 +50,11 @@ class TrainImpl: TrainService {
     }
 
     func getTrain(trainNumber: Int) -> Train? {
-        trainRepoService.getTrain(trainNumber)
+        trainRepo.getTrain(trainNumber)
     }
 
     func addTrain(_ train: Train) {
-        trainRepoService.save(train)
+        trainRepo.save(train)
     }
 
     func initializeTrainSeats(
@@ -86,7 +81,7 @@ class TrainImpl: TrainService {
         destinationName: String
     ) -> [Location]? {
 
-        let stations = trainRepoService.getRoutes(train.routeId)
+        let stations = trainRepo.getRoutes(train.routeId)
 
         guard
             let source = stations.first(where: {
@@ -203,7 +198,7 @@ class TrainImpl: TrainService {
         routeId: Int,
         location: Location
     ) {
-        trainRepoService.addRoute(routeId: routeId, location: location)
+        trainRepo.addRoute(routeId: routeId, location: location)
         locationService.addLocation(location)
     }
     

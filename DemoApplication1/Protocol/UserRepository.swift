@@ -1,6 +1,6 @@
 import Foundation
 
-protocol UserRepoService {
+protocol UserRepository {
 
     func save(_ user: User)
     func findByEmail(_ email: String) -> User?

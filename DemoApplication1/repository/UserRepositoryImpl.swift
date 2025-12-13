@@ -1,8 +1,8 @@
-class UserRepository: UserRepoService {
+class UserRepositoryImpl: UserRepository {
 
     private var users: [Int: User] = [:]
 
-    static let shared = UserRepository()
+    static let shared = UserRepositoryImpl()
     private init() {}
 
     func save(_ user: User) {

@@ -4,33 +4,29 @@ final class BookingImpl: BookingService {
 
  
     private let seatManager: SeatManagerService
-    private let seatRepo: SeatRepoService
-    private let ticketRepo: TicketRepoService
-    private let trainRepo: TrainRepoService
+    private let seatRepo: SeatRepository
+    private let ticketRepo: TicketRepository
 
     private init(
         seatManager: SeatManagerService,
-        seatRepo: SeatRepoService,
-        ticketRepo: TicketRepoService,
-        trainRepo: TrainRepoService
+        seatRepo: SeatRepository,
+        ticketRepo: TicketRepository,
+ 
     ) {
         self.seatManager = seatManager
         self.seatRepo = seatRepo
         self.ticketRepo = ticketRepo
-        self.trainRepo = trainRepo
     }
      
     static func build(
         seatManager: SeatManagerService,
-        seatRepo: SeatRepoService,
-        ticketRepo: TicketRepoService,
-        trainRepo: TrainRepoService
+        seatRepo: SeatRepository,
+        ticketRepo: TicketRepository,
     ) -> BookingService {
         return BookingImpl(
             seatManager: seatManager,
             seatRepo: seatRepo,
             ticketRepo: ticketRepo,
-            trainRepo: trainRepo
         )
     }
      

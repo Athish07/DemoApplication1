@@ -1,8 +1,8 @@
 class LocationImpl: LocationService {
 
-    private let locationRepo: LocationRepoService
+    private let locationRepo: LocationRepository
     
-    init(locationRepo: LocationRepoService) {
+    init(locationRepo: LocationRepository) {
         self.locationRepo = locationRepo
     }
 

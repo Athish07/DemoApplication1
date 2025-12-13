@@ -1,11 +1,11 @@
 import Foundation
 
-final class TicketRepository: TicketRepoService {
+final class TicketRepositoryImpl: TicketRepository {
 
     private final var tickets: [Int: Ticket] = [:]
     private final var ticketHistory: [Int: [TicketStatusHistory]] = [:]
 
-    static let shared = TicketRepository()
+    static let shared = TicketRepositoryImpl()
     private init() {}
 
     func save(_ ticket: Ticket) {

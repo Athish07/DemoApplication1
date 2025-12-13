@@ -1,6 +1,6 @@
 import Foundation
 
-protocol TrainRepoService {
+protocol TrainRepository {
     func save(_ train: Train)
     func findTrains(from source: String, to destination: String, date: Date)
     -> [Train]

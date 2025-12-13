@@ -2,17 +2,17 @@ import Foundation
 
 final class SeatManagerImpl: SeatManagerService {
 
-    private let seatRepo: SeatRepoService
-    private let trainRepo: TrainRepoService
+    private let seatRepo: SeatRepository
+    private let trainRepo: TrainRepository
 
-    private init(seatRepo: SeatRepoService, trainRepo: TrainRepoService) {
+    private init(seatRepo: SeatRepository, trainRepo: TrainRepository) {
         self.seatRepo = seatRepo
         self.trainRepo = trainRepo
     }
     
     static func build(
-        seatRepo: SeatRepoService,
-        trainRepo: TrainRepoService
+        seatRepo: SeatRepository,
+        trainRepo: TrainRepository
     ) -> SeatManagerService {
         return SeatManagerImpl(seatRepo: seatRepo, trainRepo: trainRepo)
     }

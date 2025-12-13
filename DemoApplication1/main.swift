@@ -1,66 +1,60 @@
 import Foundation
 
 private func makeSeatManagerService(
-    seatRepo: SeatRepoService,
-    trainRepo: TrainRepoService
+    seatRepo: SeatRepository,
+    trainRepo: TrainRepository
 ) -> SeatManagerService {
     return SeatManagerImpl.build(seatRepo: seatRepo, trainRepo: trainRepo)
 }
 
 private func makeBookingService(
     seatManager: SeatManagerService,
-    seatRepo: SeatRepoService,
-    ticketRepo: TicketRepoService,
-    trainRepo: TrainRepoService
+    seatRepo: SeatRepository,
+    ticketRepo: TicketRepository,
 ) -> BookingService {
     return BookingImpl.build(
         seatManager: seatManager,
         seatRepo: seatRepo,
         ticketRepo: ticketRepo,
-        trainRepo: trainRepo
     )
 }
 
 private func makeUserService(
-    userRepo: UserRepoService,
+    userRepo: UserRepository,
     bookingService: BookingService,
-    ticketRepo: TicketRepoService
 ) -> UserService {
     return UserImpl.build(
         userRepo: userRepo,
         bookingService: bookingService,
-        ticketRepo: ticketRepo
     )
 }
 
 private func makeAuthService(
-    userRepo: UserRepoService
+    userRepo: UserRepository
 ) -> AuthService {
     return AuthServiceImpl.build(userRepo: userRepo)
 }
 
 private func makeTrainService(
-    trainRepo: TrainRepoService,
-    seatRepo: SeatRepoService,
+    trainRepo: TrainRepository,
     seatManager: SeatManagerService
 ) -> TrainService {
     return TrainImpl.build(
         trainRepo: trainRepo,
-        seatRepo: seatRepo,
         seatManager: seatManager,
         locationService: locationService
     )
 }
 
-private func makeLocationService(locationRepo: LocationRepoService) -> LocationService {
+private func makeLocationService(locationRepo: LocationRepository) -> LocationService {
       return LocationImpl(locationRepo: locationRepo)
 }
 
-let userRepo = UserRepository.shared
-let seatRepo = SeatRepository.shared
-let ticketRepo = TicketRepository.shared
-let trainRepo = TrainRepository.shared
-let locationRepo = LocationRepository.shared
+let userRepo = UserRepositoryImpl.shared
+let seatRepo = SeatRepositoryImpl.shared
+let ticketRepo = TicketRepositoryImpl.shared
+let trainRepo = TrainRepositoryImpl.shared
+let locationRepo = LocationRepositoryImpl.shared
 
 let seatManager = makeSeatManagerService(
     seatRepo: seatRepo,
@@ -71,13 +65,11 @@ let bookingService = makeBookingService(
     seatManager: seatManager,
     seatRepo: seatRepo,
     ticketRepo: ticketRepo,
-    trainRepo: trainRepo
 )
 
 let userService = makeUserService(
     userRepo: userRepo,
-    bookingService: bookingService,
-    ticketRepo: ticketRepo
+    bookingService: bookingService
 )
 
 let authService = makeAuthService(userRepo: userRepo)
@@ -86,7 +78,6 @@ let locationService = makeLocationService(locationRepo: locationRepo)
 
 let trainService = makeTrainService(
     trainRepo: trainRepo,
-    seatRepo: seatRepo,
     seatManager: seatManager
 )
 

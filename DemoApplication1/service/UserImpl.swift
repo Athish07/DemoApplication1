@@ -2,30 +2,29 @@ import Foundation
 
 class UserImpl: UserService {
     
-    private let userRepo: UserRepoService
+    private let userRepo: UserRepository
     private let bookingService: BookingService
-    private let ticketRepo: TicketRepoService
+   
     
     private init(
-        userRepo: UserRepoService,
+        userRepo: UserRepository,
         bookingService: BookingService,
-        ticketRepo: TicketRepoService
+    
     ){
         self.userRepo=userRepo
         self.bookingService=bookingService
-        self.ticketRepo=ticketRepo
+   
     }
     
   
     static func build(
-        userRepo: UserRepoService,
+        userRepo: UserRepository,
         bookingService: BookingService,
-        ticketRepo: TicketRepoService
+     
     ) -> UserService {
         return UserImpl(
             userRepo: userRepo,
             bookingService: bookingService,
-            ticketRepo: ticketRepo
         )
     }
     
