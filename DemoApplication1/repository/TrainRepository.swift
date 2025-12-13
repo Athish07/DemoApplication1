@@ -4,7 +4,7 @@ class TrainRepository: TrainRepoService {
 
     private var trains: [Int: Train] = [:]
     private var route: [Int: [Location]] = [:]
-
+    
     static let shared = TrainRepository()
     private init() {}
 
@@ -35,11 +35,11 @@ class TrainRepository: TrainRepoService {
         }
     }
 
-    func addStation(routeId: Int, station: Location) {
-        route[routeId, default: []].append(station)
+    func addRoute(routeId: Int, location: Location) {
+        route[routeId, default: []].append(location)
     }
 
-    func getStations(_ routeId: Int) -> [Location] {
+    func getRoutes(_ routeId: Int) -> [Location] {
         route[routeId] ?? []
     }
 
@@ -51,7 +51,7 @@ class TrainRepository: TrainRepoService {
         Array(trains.values)
     }
 
-    func getStationNames(routeId: Int) -> [String] {
+    func getRouteNames(routeId: Int) -> [String] {
         route[routeId]?.map(\.locationName) ?? []
     }
 

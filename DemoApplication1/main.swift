@@ -47,14 +47,20 @@ private func makeTrainService(
     return TrainImpl.build(
         trainRepo: trainRepo,
         seatRepo: seatRepo,
-        seatManager: seatManager
+        seatManager: seatManager,
+        locationService: locationService
     )
+}
+
+private func makeLocationService(locationRepo: LocationRepoService) -> LocationService {
+      return LocationImpl(locationRepo: locationRepo)
 }
 
 let userRepo = UserRepository.shared
 let seatRepo = SeatRepository.shared
 let ticketRepo = TicketRepository.shared
 let trainRepo = TrainRepository.shared
+let locationRepo = LocationRepository.shared
 
 let seatManager = makeSeatManagerService(
     seatRepo: seatRepo,
@@ -76,6 +82,8 @@ let userService = makeUserService(
 
 let authService = makeAuthService(userRepo: userRepo)
 
+let locationService = makeLocationService(locationRepo: locationRepo)
+
 let trainService = makeTrainService(
     trainRepo: trainRepo,
     seatRepo: seatRepo,
@@ -86,7 +94,8 @@ let controller = AppController(
     userService: userService,
     trainService: trainService,
     authService: authService,
-    seatManager: seatManager
+    seatManager: seatManager,
+    locationService: locationService
 )
 
 let appView = AppView(controller: controller)

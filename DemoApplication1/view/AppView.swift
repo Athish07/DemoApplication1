@@ -146,7 +146,18 @@ class AppView {
     }
 
     private func searchTrains() {
-        print("Enter 0 to go back")
+        
+        print("Sources: ", terminator: "")
+        controller.getSourceAndIntermediateLocations().forEach { location in
+            print(location.locationName, terminator: " ")
+        }
+
+        print("\nDestinations: ", terminator: "")
+        controller.getDestinationLocations().forEach { location in
+            print(location.locationName, terminator: " ")
+        }
+        
+        print("\nEnter 0 to go back")
 
         print("Source: ", terminator: "")
         let source = AppHelper.readString()
@@ -161,16 +172,21 @@ class AppView {
         if dateStr == "0" { return }
 
         guard let date = DateFormatterHelper.parse(dateStr) else {
-            print("Invalid date format")
+            print("Invalid date formate (dd-MM-yyyy) or date is in the past ")
             return
         }
-
-        let normalizedDate = Calendar.current.startOfDay(for: date)
+        
+        let maxAllowedDate = Calendar.current.date(byAdding: .day, value: 120, to: Date())!
+        
+        if date > maxAllowedDate {
+            print("Date should not be more than 120 days from today")
+            return
+        }
 
         let trains = controller.searchTrains(
             source: source,
             destination: destination,
-            date: normalizedDate
+            date: date
         )
 
         if trains.isEmpty {
@@ -181,7 +197,7 @@ class AppView {
         for train in trains {
             controller.initializeTrainSeats(
                 trainNumber: train.trainNumber,
-                journeyDate: normalizedDate,
+                journeyDate: date,
                 routeId: train.routeId,
                 totalConfirmed: train.totalConfirmedSeats,
                 totalRAC: train.totalRACSeats,
@@ -196,7 +212,7 @@ class AppView {
                locations.count == 2,
                let availability = controller.getAvailability(
                 trainNumber: train.trainNumber,
-                journeyDate: normalizedDate,
+                journeyDate: date,
                 source: locations[0],
                 destination: locations[1]
                )
@@ -211,6 +227,7 @@ class AppView {
                 print("----------------------------------------")
             }
         }
+        print("Login to proceed with booking")
     }
     
     private func showProfile() {
@@ -227,8 +244,19 @@ class AppView {
     }
 
     private func searchAndBook() {
-        print("Enter 0 to go back")
+        
+        print("Sources: ", terminator: "")
+        controller.getSourceAndIntermediateLocations().forEach { location in
+            print(location.locationName, terminator: " ")
+        }
 
+        print("\nDestinations: ", terminator: "")
+        controller.getDestinationLocations().forEach { location in
+            print(location.locationName, terminator: " ")
+        }
+
+        
+        print("\nEnter 0 to go back")
         print("Source: ", terminator: "")
         let source = AppHelper.readString()
         if source == "0" { return }
@@ -242,16 +270,21 @@ class AppView {
         if dateStr == "0" { return }
 
         guard let date = DateFormatterHelper.parse(dateStr) else {
-            print("Invalid date")
+            print("Invalid date formate (dd-MM-yyyy) or date is in the past ")
             return
         }
-
-        let normalizedDate = Calendar.current.startOfDay(for: date)
-
+        
+        let maxAllowedDate = Calendar.current.date(byAdding: .day, value: 120, to: Date())!
+        
+        if date > maxAllowedDate {
+            print("Date should not be more than 120 days from today")
+            return
+        }
+        
         let trains = controller.searchTrains(
             source: source,
             destination: destination,
-            date: normalizedDate
+            date: date
         )
 
         if trains.isEmpty {
@@ -262,7 +295,7 @@ class AppView {
         for train in trains {
             controller.initializeTrainSeats(
                 trainNumber: train.trainNumber,
-                journeyDate: normalizedDate,
+                journeyDate: date,
                 routeId: train.routeId,
                 totalConfirmed: train.totalConfirmedSeats,
                 totalRAC: train.totalRACSeats,
@@ -277,7 +310,7 @@ class AppView {
                locations.count == 2,
                let availability = controller.getAvailability(
                 trainNumber: train.trainNumber,
-                journeyDate: normalizedDate,
+                journeyDate: date,
                 source: locations[0],
                 destination: locations[1]
                )
@@ -310,7 +343,13 @@ class AppView {
         let ageValue = safeReadInt()
         if ageValue == 0 { return }
         let age = UInt(ageValue)
-
+        
+        if age > 125 {
+            
+            print("Age should below 120 and above 0")
+            return
+        }
+        
         print("Gender (0 to cancel)")
         print(
             "(male, female, other, nondisclosure) (default is nondisclosure): ",
@@ -348,7 +387,7 @@ class AppView {
             seatPreference: preference.rawValue,
             source: locations[0],
             destination: locations[1],
-            journeyDate: normalizedDate
+            journeyDate: date
         ) {
             print(ticket.getDetails())
             print(

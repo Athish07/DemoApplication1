@@ -6,6 +6,7 @@ final class AppController {
     private let trainService: TrainService
     private let authService: AuthService
     private let seatManager: SeatManagerService
+    private let locationService: LocationService
 
     private(set) var currentUser: User?
 
@@ -14,11 +15,14 @@ final class AppController {
         trainService: TrainService,
         authService: AuthService,
         seatManager: SeatManagerService,
+        locationService: LocationService
+        
     ) {
         self.userService = userService
         self.trainService = trainService
         self.authService = authService
         self.seatManager = seatManager
+        self.locationService = locationService
     }
 
     private static let maxAdvanceBookingDays: UInt = 120
@@ -137,6 +141,16 @@ final class AppController {
         return userService.getUserBookingHistory(userId: user.userId)
     }
 
+    func getSourceAndIntermediateLocations() -> [Location]
+    {
+        return locationService.getSourceAndIntermediateLocations()
+    }
+    
+    func getDestinationLocations() -> [Location]
+    {
+        return locationService.getDestinationLocations()
+    }
+    
     func getTrain(_ trainNumber: Int) -> Train? {
         trainService.getTrain(trainNumber: trainNumber)
     }

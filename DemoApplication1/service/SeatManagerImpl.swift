@@ -25,7 +25,7 @@ final class SeatManagerImpl: SeatManagerService {
         totalRACSeats: UInt,
         totalWaitingSeats: UInt
     ) {
-        let stations = trainRepo.getStations(routeId)
+        let stations = trainRepo.getRoutes(routeId)
         guard stations.count > 1 else { return }
 
         var segmentSeats: [String: [String]] = [:]
@@ -280,7 +280,7 @@ final class SeatManagerImpl: SeatManagerService {
     ) -> [String] {
 
         guard let train = trainRepo.getTrain(trainNumber) else { return [] }
-        let stations = trainRepo.getStations(train.routeId)
+        let stations = trainRepo.getRoutes(train.routeId)
 
         var segments: [String] = []
         var started = false

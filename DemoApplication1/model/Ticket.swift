@@ -49,7 +49,7 @@ struct Ticket {
         self.ticketStatus = ticketStatus
         self.bookingDate = Date()
         self.pnr = Self.generatePnr()
-        
+
     }
 
     mutating func updateTicketStatus(_ newStatus: TicketStatus) {
@@ -59,7 +59,7 @@ struct Ticket {
     mutating func updateAllocatedSeat(_ newSeat: String) {
         self.allocatedSeat = newSeat
     }
-    
+
     func getDetails() -> String {
         return """
             PNR: \(pnr)
@@ -77,7 +77,7 @@ struct Ticket {
 
     func getShortDetails() -> String {
         return
-        "Pnr: \(pnr), Journey Date: \(dateOfJourney), TrainName: \(trainName)) , Status: \(ticketStatus)"
+            "Pnr: \(pnr), Journey Date: \(dateOfJourney), TrainName: \(trainName)) , Status: \(ticketStatus)"
     }
 
     private static func generatePnr() -> String {

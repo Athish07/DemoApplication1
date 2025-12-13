@@ -5,15 +5,18 @@ class TrainImpl: TrainService {
     private let trainRepoService: TrainRepoService
     private let seatRepoService: SeatRepoService
     private let seatManagerService: SeatManagerService
+    private let locationService: LocationService
 
     init(
         trainRepoService: TrainRepoService,
         seatRepoService: SeatRepoService,
-        seatManagerService: SeatManagerService
+        seatManagerService: SeatManagerService,
+        locationService: LocationService
     ) {
         self.seatManagerService = seatManagerService
         self.trainRepoService = trainRepoService
         self.seatRepoService = seatRepoService
+        self.locationService = locationService
     }
 
     private static var routeIdCounter: Int = 1
@@ -21,12 +24,14 @@ class TrainImpl: TrainService {
     static func build(
         trainRepo: TrainRepoService,
         seatRepo: SeatRepoService,
-        seatManager: SeatManagerService
+        seatManager: SeatManagerService,
+        locationService: LocationService
     ) -> TrainService {
         return TrainImpl(
             trainRepoService: trainRepo,
             seatRepoService: seatRepo,
-            seatManagerService: seatManager
+            seatManagerService: seatManager,
+            locationService:  locationService
         )
     }
 
@@ -81,7 +86,7 @@ class TrainImpl: TrainService {
         destinationName: String
     ) -> [Location]? {
 
-        let stations = trainRepoService.getStations(train.routeId)
+        let stations = trainRepoService.getRoutes(train.routeId)
 
         guard
             let source = stations.first(where: {
@@ -115,84 +120,91 @@ class TrainImpl: TrainService {
         let routeId = Self.routeIdCounter
         Self.routeIdCounter += 1
 
-        trainRepoService
-            .addStation(
-                routeId: routeId,
-                station: Location
-                    .createOrigin(name: "Chennai", departureTime: time(6, 0))
-            )
+        let location_1 = Location.createOrigin(
+            name: "Chennai",
+            departureTime: time(6, 0),
+            stopType: .source
+        )
+        addLocationToRoute(routeId: routeId, location: location_1)
         
-        trainRepoService
-            .addStation(
-                routeId: routeId,
-                station: Location
-                    .createIntermediate(
-                        name: "Vellore",
-                        arrivalTime: time(7, 30),
-                        departureTime: time(7, 45)
-                    )
-            )
+        let location_2 = Location.createIntermediate(
+            name: "Vellore",
+            arrivalTime: time(7, 30),
+            departureTime: time(7, 45),
+            stopType: .intermediate
+        )
+        addLocationToRoute(routeId: routeId, location: location_2)
         
-        trainRepoService
-            .addStation(
-                routeId: routeId,
-                station: Location
-                    .createIntermediate(
-                        name: "Hosur",
-                        arrivalTime: time(9,15),
-                        departureTime: time(9,30)
-                    )
+        let location_3 = Location.createIntermediate(
+                name: "Hosur",
+                arrivalTime: time(9,15),
+                departureTime: time(9,30),
+                stopType: .intermediate
             )
+        addLocationToRoute(routeId: routeId, location: location_3)
         
-        trainRepoService
-            .addStation(
-                routeId: routeId,
-                station: Location
-                    .createDestination(
-                        name: "Bangalore",
-                        arrivalTime: time(10,30)
-                    )
+        let location_4 = Location
+            .createDestination(
+                name: "Bangalore",
+                arrivalTime: time(10,30),
+                stopType: .destination
             )
-
+        addLocationToRoute(routeId: routeId, location: location_4)
+        
         return routeId
     }
 
     func getSampleRouteDelhiMumbai() -> Int {
         let routeId = Self.routeIdCounter   //refers to the current type .
         Self.routeIdCounter += 1
+        
+        let location1 = Location.createOrigin(
+            name: "Delhi",
+            departureTime: time(8, 0),
+            stopType: .source
+        )
+        addLocationToRoute(routeId: routeId, location: location1)
 
-        trainRepoService
-            .addStation(
-                routeId: routeId,
-                station: Location
-                    .createOrigin(name: "Delhi", departureTime: time(8, 0))
-            )
-        trainRepoService
-            .addStation(routeId: routeId, station: Location.createIntermediate(
-                name: "Agra",
-                arrivalTime: time(10, 30),
-                departureTime: time(10, 45)
-            ))
-        trainRepoService
-            .addStation(routeId: routeId, station: Location.createIntermediate(
-                name: "Ujjain",
-                arrivalTime: time(19, 0),
-                departureTime: time(19, 15)
-            ))
-        trainRepoService
-            .addStation(routeId: routeId, station: Location.createIntermediate(
-                name: "Vadodara",
-                arrivalTime: time(20, 30),
-                departureTime: time(20, 45)
-            ))
-        trainRepoService
-            .addStation(
-                routeId: routeId,
-                station:  Location
-                    .createDestination(name: "Mumbai", arrivalTime: time(23, 0))
-            )
+        let location2 = Location.createIntermediate(
+            name: "Agra",
+            arrivalTime: time(10, 30),
+            departureTime: time(10, 45),
+            stopType: .intermediate
+        )
+        addLocationToRoute(routeId: routeId, location: location2)
+
+        let location3 = Location.createIntermediate(
+            name: "Ujjain",
+            arrivalTime: time(19, 0),
+            departureTime: time(19, 15),
+            stopType: .intermediate
+        )
+        addLocationToRoute(routeId: routeId, location: location3)
+
+        let location4 = Location.createIntermediate(
+            name: "Vadodara",
+            arrivalTime: time(20, 30),
+            departureTime: time(20, 45),
+            stopType: .intermediate
+        )
+        addLocationToRoute(routeId: routeId, location: location4)
+
+        let location5 = Location.createDestination(
+            name: "Mumbai",
+            arrivalTime: time(23, 0),
+            stopType: .destination
+        )
+        addLocationToRoute(routeId: routeId, location: location5)
 
         return routeId
+    }
+    
+    private func addLocationToRoute(
+        routeId: Int,
+        location: Location
+    ) {
+        trainRepoService.addRoute(routeId: routeId, location: location)
+        locationService.addLocation(location)
     }
     
     private func time(_ hour: Int, _ minute: Int) -> Date {
