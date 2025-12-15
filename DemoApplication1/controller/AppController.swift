@@ -96,7 +96,24 @@ final class AppController {
             password: password
         )
     }
-
+    
+    func updateUserDetails(name: String, phone: String)  {
+        
+        guard let user = currentUser else { return }
+        
+        userService.updateUserDetails(userId: user.userId, userName: name, phoneNumber: phone)
+        currentUser = userService.findUserById(userId: user.userId)
+    }
+    
+    func changePassword(newPassword: String) {
+        
+        guard let user = currentUser else { return }
+        
+        userService.changePassword(userId: user.userId, newPassword: newPassword)
+        currentUser = userService.findUserById(userId: user.userId)
+        
+    }
+    
     func searchTrains(source: String, destination: String, date: Date)
     -> [Train]
     {
@@ -134,6 +151,10 @@ final class AppController {
 
     func cancelTicket(ticketId: Int) -> Bool {
         userService.cancelTicket(ticketId: ticketId)
+    }
+    
+    func ticketStatusHistory(ticketId: Int) -> [TicketStatusHistory] {
+        userService.viewTicketStatus(ticketId: ticketId)
     }
 
     func bookingHistory() -> [Ticket] {

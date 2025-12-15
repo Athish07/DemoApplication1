@@ -176,6 +176,13 @@ class AppView {
             return
         }
         
+        let today = Calendar.current.startOfDay(for: Date())
+        
+        if date <= today {
+            print("Date should be greater than today's date")
+            return
+        }
+        
         let maxAllowedDate = Calendar.current.date(byAdding: .day, value: 120, to: Date())!
         
         if date > maxAllowedDate {
@@ -241,8 +248,122 @@ class AppView {
         print("Email: \(currentUser.email)")
         print("phoneNumber: \(currentUser.phoneNumber)")
         
+        print("\nIf you want to update the profile details (yes,no): ", terminator: "")
+        let input = AppHelper.readString()
+        
+        if input.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "yes" {
+            updateProfile()
+        }
+    }
+    
+    private func updateProfile() {
+        
+        print("---------------------------------")
+        print("1. Update UserName and PhoneNumber")
+        print("2. Update Password")
+        print("---------------------------------")
+        print("Enter your choice: ", terminator: "")
+
+        let choice = AppHelper.readInt()
+
+        switch choice {
+        case 1:
+            updateUserDetails()
+
+        case 2:
+            updatePassword()
+
+        default:
+            print("Invalid option.")
+        }
+
+        
+    }
+    
+    private func updateUserDetails() {
+       
+        guard let user = controller.currentUser else {
+            print("No user logged in.")
+            return
+        }
+
+        print("------ Update Profile ------")
+
+        
+        print("Current Name: \(user.userName)")
+        print("Enter new name (press Enter to keep current): ", terminator: "")
+        
+        var newNameInput = readLine() ?? ""
+       
+        if newNameInput.isEmpty {
+            newNameInput = user.userName
+        }
+            
+        guard Validation.isValidName(newNameInput) else {
+                print("Invalid name.")
+                return
+        }
+
+
+      
+        print("Current Phone Number: \(user.phoneNumber)")
+        print("Enter new phone number (press Enter to keep current): ", terminator: "")
+        
+        var newPhoneNumber = readLine() ?? ""
+        
+        if newPhoneNumber.isEmpty {
+            newPhoneNumber = user.phoneNumber
+        }
+        
+        guard Validation.isValidPhone(newPhoneNumber) else {
+            print("Invalid phone number.")
+            return
+        }
+        
+        controller.updateUserDetails(name: newNameInput, phone: newPhoneNumber)
+        print("Updated Successfully.")
+            
+    }
+    
+    private func updatePassword() {
+        
+        guard let user = controller.currentUser else {
+            print("No user logged in.")
+            return
+        }
+
+        print("------ Update Password ------")
+
+        print("Enter old password: ", terminator: "")
+        
+        guard let oldPassword = readLine(), !oldPassword.isEmpty else {
+            print("Invalid input.")
+            return
+        }
+
+        if oldPassword != user.password {
+            print("Incorrect old password.")
+            return
+        }
+
+        print("Enter new password: ", terminator: "")
+        guard let newPassword = readLine(), !newPassword.isEmpty, Validation.isValidPassword(newPassword) else {
+            print("New password cannot be empty.")
+            return
+        }
+
+        print("Confirm new password: ", terminator: "")
+        guard let confirmPassword = readLine(), confirmPassword == newPassword else {
+            print("Passwords do not match.")
+            return
+        }
+       
+       controller.changePassword(newPassword: newPassword)
+       print("Password updated successfully.")
+        
     }
 
+    
     private func searchAndBook() {
         
         print("Sources: ", terminator: "")
@@ -274,6 +395,13 @@ class AppView {
             return
         }
         
+        let today = Calendar.current.startOfDay(for: Date())
+        
+        if date <= today {
+            print("Date should be greater than today's date")
+            return
+        }
+        
         let maxAllowedDate = Calendar.current.date(byAdding: .day, value: 120, to: Date())!
         
         if date > maxAllowedDate {
@@ -286,7 +414,7 @@ class AppView {
             destination: destination,
             date: date
         )
-
+        
         if trains.isEmpty {
             print("No trains found")
             return
@@ -334,7 +462,7 @@ class AppView {
             print("Invalid Train")
             return
         }
-
+        
         print("Passenger Name (0 to cancel): ", terminator: "")
         let name = AppHelper.readString()
         if name == "0" { return }
@@ -440,6 +568,24 @@ class AppView {
         for ticket in history {
             print(ticket.getDetails())
         }
+        
+        print("\nDo you want to track the ticket states? (yes/no):", terminator: "")
+        let input = AppHelper.readString()
+        if input.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "yes" {
+            print("Enter the Ticket ID: ", terminator: "")
+            let ticketId = safeReadInt()
+            
+            let history = controller.ticketStatusHistory(ticketId: ticketId)
+
+            if history.isEmpty {
+                print("No status found for that ticket number")
+            } else {
+                for item in history {
+                    print("\(item.date.formatTimeOnlyIST()) - \(item.status.rawValue)")
+                }
+            }
+        }
+        
     }
 
     private func safeReadInt(allowZeroAsValid: Bool = false) -> Int {

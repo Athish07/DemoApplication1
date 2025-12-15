@@ -61,20 +61,5 @@ struct Location {
     public var isDestinationStation: Bool {
         departureTime == nil && arrivalTime != nil
     }
-
-    public var timeInfo: String {
-
-        switch (arrivalTime, departureTime) {
-        case (nil, let dep?):
-            return "Departure: \(dep.formatted(.dateTime.hour().minute()))"
-        case (let arr?, nil):
-            return "Arrival: \(arr.formatted(.dateTime.hour().minute()))"
-        case (let arr?, let dep?):
-            return
-                "Arr: \(arr.formatted(.dateTime.hour().minute())) | Dep: \(dep.formatted(.dateTime.hour().minute()))"
-        default:
-            return "No times"
-        }
-    }
     
 }

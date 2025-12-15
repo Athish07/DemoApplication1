@@ -24,7 +24,7 @@ final class TicketRepositoryImpl: TicketRepository {
         ticketHistory[ticketId, default: []].append(history)
     }
 
-    func history(for ticketId: Int) -> [TicketStatusHistory] {
+    func ticketHistory(for ticketId: Int) -> [TicketStatusHistory] {
         ticketHistory[ticketId] ?? []
     }
 }

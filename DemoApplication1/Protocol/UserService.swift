@@ -1,7 +1,8 @@
 import Foundation
 
 protocol UserService {
-    func validatePassword(currentUser: User?, oldPassword: String) -> Bool
+    func updateUserDetails(userId: Int, userName: String, phoneNumber: String)
+    func changePassword(userId: Int, newPassword: String)
     func bookTicket(
         user: User,
         train: Train,
@@ -16,4 +17,5 @@ protocol UserService {
     func cancelTicket(ticketId: Int) -> Bool
     func getUserBookingHistory(userId: Int) -> [Ticket]
     func viewTicketStatus(ticketId: Int) -> [TicketStatusHistory]
+    func findUserById(userId: Int) -> User?
 }

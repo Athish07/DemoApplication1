@@ -12,13 +12,8 @@ class UserRepositoryImpl: UserRepository {
     func findByEmail(_ email: String) -> User? {
         users.values.first { $0.email == email }
     }
-
-    func getAll() -> [User] {
-        Array(users.values)
-    }
     
-    func updatePassword(for userId: Int, with newPassword: String) {
-        users[userId]?.password = newPassword
+    func findById(_ id: Int) -> User? {
+        users[id]
     }
-    
 }

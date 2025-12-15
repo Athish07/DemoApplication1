@@ -19,5 +19,14 @@ struct User {
         self.password = password
         self.phoneNumber = phoneNumber
     }
-
+    
+    mutating func updateUserDetails(_ newName: String, _ phoneNumber: String) {
+        self.userName = newName
+        self.phoneNumber = phoneNumber
+    }
+    
+    mutating func updatePassword(_ password: String) {
+        self.password = password
+    }
+    
 }
