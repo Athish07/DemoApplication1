@@ -26,7 +26,7 @@ final class SeatRepositoryImpl: SeatRepository {
     
     func removeWaitingListSeat(for key: String) -> Ticket?
     {
-         waitingLists[key]?.removeFirst()
+        waitingLists[key]?.removeFirst()
     }
     
     func saveRACQueue(_ ticket: Ticket, for key: String) {
@@ -67,6 +67,7 @@ final class SeatRepositoryImpl: SeatRepository {
         allDates[date] = dayMap
         bookedSeatsMap[trainNumber] = allDates
     }
+    
     func updateBookedSeats(
         trainNumber: Int,
         updatedMap: [Date: [String: Set<String>]]

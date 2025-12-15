@@ -212,55 +212,36 @@ final class SeatManagerImpl: SeatManagerService {
         preference: String?
     ) -> String {
 
-        guard let firstSegment = segments.first, !segments.isEmpty else {
+        guard let firstSegment = segments.first else {
             return "NULL"
         }
 
-        var possibleSeats = Set<String>()
-
-        for seat in seatMap[firstSegment] ?? [] {
-            let hasPrefix = seat.hasPrefix(prefix)
-            let matchesPreference =
-            preference == nil || preference?.lowercased() == "no-preference"
-            || seat.contains(preference!.prefix(1).uppercased())
-            let notBooked = !(bookedMap[firstSegment] ?? []).contains(seat)
-
-            if hasPrefix && matchesPreference && notBooked {
-                possibleSeats.insert(seat)
-            }
-        }
+        var possibleSeats = validSeats(
+            seats: seatMap[firstSegment] ?? [],
+            booked: bookedMap[firstSegment] ?? [],
+            prefix: prefix,
+            preference: preference
+        )
 
         for segment in segments {
-            let bookedInSegment = bookedMap[segment] ?? []
-            let seatsInSegment = seatMap[segment] ?? []
+            let validInSegment = validSeats(
+                seats: seatMap[segment] ?? [],
+                booked: bookedMap[segment] ?? [],
+                prefix: prefix,
+                preference: preference
+            )
 
-            var validInThisSegment = Set<String>()
-
-            for seat in seatsInSegment {
-                let hasPrefix = seat.hasPrefix(prefix)
-                let matchesPreference =
-                preference == nil
-                || preference?.lowercased() == "no-preference"
-                || seat.contains(preference!.prefix(1).uppercased())
-                let notBooked = !bookedInSegment.contains(seat)
-
-                if hasPrefix && matchesPreference && notBooked {
-                    validInThisSegment.insert(seat)
-                }
-            }
-
-            possibleSeats.formIntersection(validInThisSegment)
+            possibleSeats.formIntersection(validInSegment)
 
             if possibleSeats.isEmpty {
                 break
             }
         }
 
-     
         if possibleSeats.isEmpty,
            let pref = preference,
-           pref.lowercased() != "no-preference"
-        {
+           pref.lowercased() != "no-preference" {
+
             return findSeatByPreference(
                 segments: segments,
                 seatMap: seatMap,
@@ -272,6 +253,8 @@ final class SeatManagerImpl: SeatManagerService {
 
         return possibleSeats.first ?? "NULL"
     }
+
+    
 
     func getSegmentsBetween(
         _ trainNumber: Int,
@@ -305,7 +288,31 @@ final class SeatManagerImpl: SeatManagerService {
 
         return segments
     }
-
+    
+    private func validSeats(
+        seats: [String],
+        booked: Set<String>,
+        prefix: String,
+        preference: String?
+    ) -> Set<String> {
+        
+        let pref = preference?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let prefLetter = pref?.prefix(1).uppercased()
+        
+        return Set(
+            seats.filter { seat in
+                guard seat.hasPrefix(prefix) else { return false }
+                guard !booked.contains(seat) else { return false }
+                
+                if pref == nil || pref == "no-preference" {
+                    return true
+                }
+                
+                return seat.contains(prefLetter ?? "")
+            }
+        )
+    }
+    
     private func compositeKey(_ trainNumber: Int, _ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"

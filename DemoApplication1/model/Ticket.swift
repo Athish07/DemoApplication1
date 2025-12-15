@@ -76,8 +76,7 @@ struct Ticket {
     }
 
     func getShortDetails() -> String {
-        return
-            "Pnr: \(pnr), Journey Date: \(dateOfJourney), TrainName: \(trainName)) , Status: \(ticketStatus)"
+        return "Pnr: \(pnr), Journey Date: \(dateOfJourney), TrainName: \(trainName)) , Status: \(ticketStatus)"
     }
 
     private static func generatePnr() -> String {

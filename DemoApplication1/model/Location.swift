@@ -1,16 +1,16 @@
 import Foundation
 
 struct Location {
-     let locationId: Int
-     let locationName: String
-     let arrivalTime: Date?
-     let departureTime: Date?
+    let locationId: Int
+    let locationName: String
+    let arrivalTime: Date?
+    let departureTime: Date?
     let stopType: StopType
 
     private static var nextId: Int = 1
 
     public static func createOrigin(name: String, departureTime: Date, stopType: StopType)
-        -> Location
+    -> Location
     {
         return Location(
             name: name,
@@ -21,7 +21,7 @@ struct Location {
     }
 
     public static func createDestination(name: String, arrivalTime: Date, stopType: StopType)
-        -> Location
+    -> Location
     {
         return Location(
             name: name,
@@ -45,7 +45,12 @@ struct Location {
         )
     }
 
-    public init(name: String, arrivalTime: Date?, departureTime: Date?, stopType: StopType) {
+    public init(
+        name: String,
+        arrivalTime: Date?,
+        departureTime: Date?,
+        stopType: StopType
+    ) {
         self.locationId = Self.nextId
         Self.nextId += 1
         self.locationName = name

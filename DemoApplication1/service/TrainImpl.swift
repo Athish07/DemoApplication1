@@ -131,11 +131,11 @@ class TrainImpl: TrainService {
         addLocationToRoute(routeId: routeId, location: location_2)
         
         let location_3 = Location.createIntermediate(
-                name: "Hosur",
-                arrivalTime: time(9,15),
-                departureTime: time(9,30),
-                stopType: .intermediate
-            )
+            name: "Hosur",
+            arrivalTime: time(9,15),
+            departureTime: time(9,30),
+            stopType: .intermediate
+        )
         addLocationToRoute(routeId: routeId, location: location_3)
         
         let location_4 = Location

@@ -53,11 +53,11 @@ private func makeTrainService(
 
 func main() {
     
-    let userRepo = UserRepositoryImpl.shared
-    let seatRepo = SeatRepositoryImpl.shared
-    let ticketRepo = TicketRepositoryImpl.shared
-    let trainRepo = TrainRepositoryImpl.shared
-    let locationRepo = LocationRepositoryImpl.shared
+    let userRepo: UserRepository = UserRepositoryImpl.shared
+    let seatRepo: SeatRepository = SeatRepositoryImpl.shared
+    let ticketRepo: TicketRepository = TicketRepositoryImpl.shared
+    let trainRepo: TrainRepository = TrainRepositoryImpl.shared
+    let locationRepo: LocationRepository = LocationRepositoryImpl.shared
 
     let locationService = makeLocationService(locationRepo: locationRepo)
 

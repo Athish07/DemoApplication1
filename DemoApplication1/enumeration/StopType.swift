@@ -1,6 +1,5 @@
 enum StopType {
-   case source
-   case intermediate
-   case destination
+    case source
+    case intermediate
+    case destination
 }
-

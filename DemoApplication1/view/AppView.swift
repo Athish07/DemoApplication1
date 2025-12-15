@@ -183,7 +183,11 @@ class AppView {
             return
         }
         
-        let maxAllowedDate = Calendar.current.date(byAdding: .day, value: 120, to: Date())!
+        let maxAllowedDate = Calendar.current.date(
+            byAdding: .day,
+            value: 120,
+            to: Date()
+        )!
         
         if date > maxAllowedDate {
             print("Date should not be more than 120 days from today")
@@ -248,10 +252,15 @@ class AppView {
         print("Email: \(currentUser.email)")
         print("phoneNumber: \(currentUser.phoneNumber)")
         
-        print("\nIf you want to update the profile details (yes,no): ", terminator: "")
+        print(
+            "\nIf you want to update the profile details (yes,no): ",
+            terminator: ""
+        )
         let input = AppHelper.readString()
         
-        if input.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "yes" {
+        if input
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased() == "yes" {
             updateProfile()
         }
     }
@@ -300,14 +309,17 @@ class AppView {
         }
             
         guard Validation.isValidName(newNameInput) else {
-                print("Invalid name.")
-                return
+            print("Invalid name.")
+            return
         }
 
 
       
         print("Current Phone Number: \(user.phoneNumber)")
-        print("Enter new phone number (press Enter to keep current): ", terminator: "")
+        print(
+            "Enter new phone number (press Enter to keep current): ",
+            terminator: ""
+        )
         
         var newPhoneNumber = readLine() ?? ""
         
@@ -347,7 +359,8 @@ class AppView {
         }
 
         print("Enter new password: ", terminator: "")
-        guard let newPassword = readLine(), !newPassword.isEmpty, Validation.isValidPassword(newPassword) else {
+        guard let newPassword = readLine(), !newPassword.isEmpty, Validation
+            .isValidPassword(newPassword) else {
             print("New password cannot be empty.")
             return
         }
@@ -358,8 +371,8 @@ class AppView {
             return
         }
        
-       controller.changePassword(newPassword: newPassword)
-       print("Password updated successfully.")
+        controller.changePassword(newPassword: newPassword)
+        print("Password updated successfully.")
         
     }
 
@@ -402,7 +415,11 @@ class AppView {
             return
         }
         
-        let maxAllowedDate = Calendar.current.date(byAdding: .day, value: 120, to: Date())!
+        let maxAllowedDate = Calendar.current.date(
+            byAdding: .day,
+            value: 120,
+            to: Date()
+        )!
         
         if date > maxAllowedDate {
             print("Date should not be more than 120 days from today")
@@ -569,9 +586,14 @@ class AppView {
             print(ticket.getDetails())
         }
         
-        print("\nDo you want to track the ticket states? (yes/no):", terminator: "")
+        print(
+            "\nDo you want to track the ticket states? (yes/no):",
+            terminator: ""
+        )
         let input = AppHelper.readString()
-        if input.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "yes" {
+        if input
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased() == "yes" {
             print("Enter the Ticket ID: ", terminator: "")
             let ticketId = safeReadInt()
             
@@ -581,7 +603,9 @@ class AppView {
                 print("No status found for that ticket number")
             } else {
                 for item in history {
-                    print("\(item.date.formatTimeOnlyIST()) - \(item.status.rawValue)")
+                    print(
+                        "\(item.date.formatTimeOnlyIST()) - \(item.status.rawValue)"
+                    )
                 }
             }
         }

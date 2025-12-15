@@ -101,7 +101,12 @@ final class AppController {
         
         guard let user = currentUser else { return }
         
-        userService.updateUserDetails(userId: user.userId, userName: name, phoneNumber: phone)
+        userService
+            .updateUserDetails(
+                userId: user.userId,
+                userName: name,
+                phoneNumber: phone
+            )
         currentUser = userService.findUserById(userId: user.userId)
     }
     
@@ -109,7 +114,8 @@ final class AppController {
         
         guard let user = currentUser else { return }
         
-        userService.changePassword(userId: user.userId, newPassword: newPassword)
+        userService
+            .changePassword(userId: user.userId, newPassword: newPassword)
         currentUser = userService.findUserById(userId: user.userId)
         
     }
